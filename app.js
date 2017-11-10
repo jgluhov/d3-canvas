@@ -1,0 +1,1 @@
+const plot = d3.select('#plot');
