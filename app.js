@@ -1,19 +1,30 @@
-const plot = d3.select('#plot');
+const charts = d3.selectAll('.chart'),
+    contexts = [],
+    data = [1, 12, 20, 23];
 
-const chart = plot.append('canvas')
+charts.append('canvas')
     .attr('width', 400)
     .attr('height', 300);
 
-const context = chart.node().getContext('2d');
-const data = [1, 12, 20, 23];
+charts.nodes().forEach(function (node) {
+    contexts.push(node.firstChild.getContext('2d'));
+});
 
 const xScale = d3.scaleLinear()
     .domain([1, 23])
     .range([10, 390]);
 
-setBackground(context);
+contexts.forEach(function (context) {
+    context.fillStyle = '#9ea7b8';
+    context.fillRect(0, 0, 400, 300);
+});
 
+/**
+ * First way to draw on canvas
+ */
 data.forEach(function (d) {
+    const context = contexts[0];
+
     context.beginPath();
     context.rect(xScale(d), 150, 10, 10);
     context.fillStyle = 'red';
@@ -21,7 +32,9 @@ data.forEach(function (d) {
     context.closePath();
 });
 
-function setBackground(context) {
-    context.fillStyle = '#9ea7b8';
-    context.fillRect(0, 0, 400, 300);
-}
+
+/**
+ * Second way to draw on canvas
+ */
+
+const fragment = document.createDocumentFragment();
